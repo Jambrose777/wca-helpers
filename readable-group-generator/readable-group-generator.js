@@ -7,14 +7,29 @@ let staff = [
 
 const eventIds = ['333', '222', '444', '555', '666', '777', '333bf', '333oh', 'clock', 'minx', 'pyram', 'skewb', 'sq1', '444bf', '555bf', '333mbf'];
 
+
 const stages = [{
   stage: 'red',
   symbol: 'R',
-  groups: [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]
+  groups: [1, 3, 5, 7, 9, 11, 13, 15, 17, 19],
+  specialGroups: [{
+    eventId: '555',
+    groups: [3, 5]
+  },{
+    eventId: '333bf',
+    groups: [1, 2]
+  }]
 },{
   stage: 'blue',
   symbol: 'B',
-  groups: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+  groups: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20],
+  specialGroups: [{
+    eventId: '555',
+    groups: [1, 2, 4, 6]
+  },{
+    eventId: '333bf',
+    groups: []
+  }]
 }]
 
 // build event list + max number of groups
@@ -68,18 +83,31 @@ let newGroupList = json.map(person => {
 
     // convert group into readable text
     if(competitorGroup > 0) {
-      let stage = stages.find(stage => stage.groups.includes(competitorGroup));
-      let groupText = stage.symbol + (stage.groups.indexOf(competitorGroup) + 1);
-      if (!staff.includes(newPerson.wcaId)) {
-        groupText += '; J-' + stage.symbol;
-        if(stage.groups.indexOf(competitorGroup) === stage.groups.length - 1) {
-          groupText += 1;
-        } else {
-          groupText += (stage.groups.indexOf(competitorGroup) + 2);
+      if(stages[0].specialGroups.find(special => special.eventId === event.id)) {
+        let stage = stages.find(stage => stage.specialGroups.find(special => special.eventId === event.id).groups.includes(competitorGroup));
+        let groupText = stage.symbol + (stage.specialGroups.find(special => special.eventId === event.id).groups.indexOf(competitorGroup) + 1);
+        if (!staff.includes(newPerson.wcaId)) {
+          groupText += '; J-' + stage.symbol;
+          if(stage.specialGroups.find(special => special.eventId === event.id).groups.indexOf(competitorGroup) === stage.specialGroups.find(special => special.eventId === event.id).groups.length - 1) {
+            groupText += 1;
+          } else {
+            groupText += (stage.specialGroups.find(special => special.eventId === event.id).groups.indexOf(competitorGroup) + 2);
+          }
         }
+        newPerson[event.id] = groupText;
+      } else {
+        let stage = stages.find(stage => stage.groups.includes(competitorGroup));
+        let groupText = stage.symbol + (stage.groups.indexOf(competitorGroup) + 1);
+        if (!staff.includes(newPerson.wcaId)) {
+          groupText += '; J-' + stage.symbol;
+          if(stage.groups.indexOf(competitorGroup) === stage.groups.length - 1) {
+            groupText += 1;
+          } else {
+            groupText += (stage.groups.indexOf(competitorGroup) + 2);
+          }
+        }
+        newPerson[event.id] = groupText;
       }
-      
-      newPerson[event.id] = groupText;
     } else {
       newPerson[event.id] = '';
     }
