@@ -1,0 +1,24 @@
+{
+  "name": "wca-helpers",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jambrose777/wca-helpers.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jambrose777/wca-helpers/issues"
+  },
+  "homepage": "https://github.com/Jambrose777/wca-helpers#readme",
+  "dependencies": {
+    "csv-parse": "^5.3.6",
+    "csv-stream-to-json": "^1.0.1"
+  }
+}
