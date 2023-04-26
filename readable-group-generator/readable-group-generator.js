@@ -2,11 +2,50 @@ const json = require('./input.json');
 var fs = require('fs');
 
 let staff = [
-  '2010AMBR01'
+  '2010AMBR01',
+  '2017MOOR03',
+'2010AMBR01',
+'2010Hull01',
+'2017WOFF01',
+'2014GOSL01',
+'2018SMIT40',
+'2019BEAR03',
+'2017HICK03',
+'2015TALB01',
+'2017WELC01',
+'2017LAMB06',
+'2015YORK01',
+'2017CUZI01',
+'2016BITZ01',
+'2018HEAT02',
+'2017DOVE01',
+'2016PILA03',
+'2015FERA01',
+'2015PADG01',
+'2019JOHN03',
+'2021ARDN01',
+'2014NICH02',
+'2017SANK04',
+'2017SEOH01',
+'2014SHIE03',
+'2017HART11',
+'2015BEUG01',
+'2014STIN01',
+'2022LEAV01',
+'2010WHIT05',
+'2014GRAV02',
+'2016MULL04 ',
+'2016OCHS01',
+'2011DWYE02',
+'2022BENN11',
+'2015GOSK01',
+'2016HART02',
+'2017SWOR01',
 ]
 
 const eventIds = ['333', '222', '444', '555', '666', '777', '333bf', '333oh', 'clock', 'minx', 'pyram', 'skewb', 'sq1', '444bf', '555bf', '333mbf'];
 
+const eventsWithoutJudging = ['444bf', '555bf', '333mbf'];
 
 const stages = [{
   stage: 'red',
@@ -14,7 +53,7 @@ const stages = [{
   groups: [1, 3, 5, 7, 9, 11, 13, 15, 17, 19],
   specialGroups: [{
     eventId: '555',
-    groups: [3, 5]
+    groups: [-1, -2, 3, 5]
   },{
     eventId: '333bf',
     groups: [1, 2]
@@ -86,9 +125,10 @@ let newGroupList = json.map(person => {
       if(stages[0].specialGroups.find(special => special.eventId === event.id)) {
         let stage = stages.find(stage => stage.specialGroups.find(special => special.eventId === event.id).groups.includes(competitorGroup));
         let groupText = stage.symbol + (stage.specialGroups.find(special => special.eventId === event.id).groups.indexOf(competitorGroup) + 1);
-        if (!staff.includes(newPerson.wcaId)) {
+        if (!staff.includes(newPerson.wcaId) && !eventsWithoutJudging.includes(event.id)) {
           groupText += '; J-' + stage.symbol;
-          if(stage.specialGroups.find(special => special.eventId === event.id).groups.indexOf(competitorGroup) === stage.specialGroups.find(special => special.eventId === event.id).groups.length - 1) {
+          if(competitorGroup + 2 > event.maxGroup) {
+// Next Group is a little buggy here
             groupText += 1;
           } else {
             groupText += (stage.specialGroups.find(special => special.eventId === event.id).groups.indexOf(competitorGroup) + 2);
@@ -98,9 +138,10 @@ let newGroupList = json.map(person => {
       } else {
         let stage = stages.find(stage => stage.groups.includes(competitorGroup));
         let groupText = stage.symbol + (stage.groups.indexOf(competitorGroup) + 1);
-        if (!staff.includes(newPerson.wcaId)) {
+        if (!staff.includes(newPerson.wcaId) && !eventsWithoutJudging.includes(event.id)) {
           groupText += '; J-' + stage.symbol;
-          if(stage.groups.indexOf(competitorGroup) === stage.groups.length - 1) {
+          if(competitorGroup + 2 > event.maxGroup) {
+          // if(stage.groups.indexOf(competitorGroup) === stage.groups.length - 1) {
             groupText += 1;
           } else {
             groupText += (stage.groups.indexOf(competitorGroup) + 2);
